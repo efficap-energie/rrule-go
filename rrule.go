@@ -91,6 +91,7 @@ var (
 type ROption struct {
 	Freq       Frequency
 	Dtstart    time.Time
+	Dtend      time.Time
 	Interval   int
 	Wkst       Weekday
 	Count      int
@@ -114,6 +115,8 @@ type RRule struct {
 	Options                 ROption
 	freq                    Frequency
 	dtstart                 time.Time
+	dtend                   time.Time
+	duration                time.Duration
 	interval                int
 	wkst                    int
 	count                   int
@@ -165,6 +168,16 @@ func buildRRule(arg ROption) RRule {
 	}
 	arg.Dtstart = arg.Dtstart.Truncate(time.Second)
 	r.dtstart = arg.Dtstart
+
+	// DTEND defaults to DTSTART
+	if arg.Dtend.IsZero() {
+		arg.Dtend = time.Now().UTC()
+	}
+	arg.Dtend = arg.Dtend.Truncate(time.Second)
+	r.dtend = arg.Dtend
+
+	// Generate duration
+	r.duration = r.dtend.Sub(r.dtstart)
 
 	// UNTIL
 	if arg.Until.IsZero() {
@@ -947,4 +960,21 @@ func (r *RRule) Until(ut time.Time) {
 // GetUntil gets UNTIL time for rrule
 func (r *RRule) GetUntil() time.Time {
 	return r.until
+}
+
+// Implements efficap rule to detect if an event is here or not
+func (r *RRule) IsEventAtDuration(before time.Time, after time.Time) bool {
+	next := r.Iterator()
+	for {
+		start, ok := next()
+		end := start.Add(r.duration)
+		fmt.Println("OKLM : ", before, after, start, end, ok, start.After(before), start.After(after), after.After(end), after.After(start), after.Before(end))
+		if !ok || (start.After(before) && start.After(after)) || after.After(end) {
+			return false
+		}
+		if after.After(start) && after.Before(end) {
+			return true
+		}
+		return false
+	}
 }

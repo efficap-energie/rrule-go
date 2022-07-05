@@ -3856,6 +3856,31 @@ func TestBetweenInc(t *testing.T) {
 	}
 }
 
+func TestIsEventAtDuration(t *testing.T) {
+	r, _ := NewRRule(ROption{Freq: DAILY,
+		Dtstart: time.Date(1997, 9, 2, 9, 0, 0, 0, time.UTC),
+		Dtend:   time.Date(1997, 9, 2, 10, 30, 0, 0, time.UTC),
+	})
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 8, 0, 0, 0, time.UTC), time.Date(1997, 9, 2, 8, 30, 0, 0, time.UTC)) == false {
+		t.Errorf("Error with is event at duration")
+	}
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 0, 0, 0, time.UTC), time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC)) == true {
+		t.Errorf("Error with is event at duration")
+	}
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 9, 45, 0, 0, time.UTC)) == true {
+		t.Errorf("Error with is event at duration")
+	}
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 8, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC)) == false {
+		t.Errorf("Error with is event at duration")
+	}
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC)) == false {
+		t.Errorf("Error with is event at duration")
+	}
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 10, 45, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC)) == false {
+		t.Errorf("Error with is event at duration")
+	}
+}
+
 func TestAllWithDefaultUtil(t *testing.T) {
 	r, _ := NewRRule(ROption{Freq: YEARLY,
 		Dtstart: time.Date(1997, 9, 2, 9, 0, 0, 0, time.UTC)})
