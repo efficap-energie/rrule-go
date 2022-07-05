@@ -969,12 +969,11 @@ func (r *RRule) IsEventAtDuration(before time.Time, after time.Time) bool {
 		start, ok := next()
 		end := start.Add(r.duration)
 		fmt.Println("OKLM : ", before, after, start, end, ok, start.After(before), start.After(after), after.After(end), after.After(start), after.Before(end))
-		if !ok || (start.After(before) && start.After(after)) || after.After(end) {
-			return false
-		}
 		if after.After(start) && after.Before(end) {
 			return true
 		}
-		return false
+		if !ok {
+			return false
+		}
 	}
 }
