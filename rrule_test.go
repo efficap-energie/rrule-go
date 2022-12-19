@@ -3861,22 +3861,30 @@ func TestIsEventAtDuration(t *testing.T) {
 		Dtstart: time.Date(1997, 9, 2, 9, 0, 0, 0, time.UTC),
 		Dtend:   time.Date(1997, 9, 2, 10, 30, 0, 0, time.UTC),
 	})
-	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 8, 0, 0, 0, time.UTC), time.Date(1997, 9, 2, 8, 30, 0, 0, time.UTC)) == false {
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 8, 0, 0, 0, time.UTC), time.Date(1997, 9, 2, 8, 30, 0, 0, time.UTC), nil) == false {
 		t.Errorf("Error with is event at duration")
 	}
-	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 0, 0, 0, time.UTC), time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC)) == true {
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 0, 0, 0, time.UTC), time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC), nil) == true {
 		t.Errorf("Error with is event at duration")
 	}
-	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 9, 45, 0, 0, time.UTC)) == true {
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 9, 45, 0, 0, time.UTC), nil) == true {
 		t.Errorf("Error with is event at duration")
 	}
-	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 8, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC)) == false {
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 8, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC), nil) == false {
 		t.Errorf("Error with is event at duration")
 	}
-	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC)) == false {
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 9, 30, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC), nil) == false {
 		t.Errorf("Error with is event at duration")
 	}
-	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 10, 45, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC)) == false {
+	if !r.IsEventAtDuration(time.Date(1997, 9, 2, 10, 45, 0, 0, time.UTC), time.Date(1997, 9, 2, 11, 45, 0, 0, time.UTC), nil) == false {
+		t.Errorf("Error with is event at duration")
+	}
+	if !r.IsEventAtDuration(time.Date(1997, 9, 4, 9, 0, 0, 0, time.UTC), time.Date(1997, 9, 4, 9, 30, 0, 0, time.UTC), nil) == true {
+		t.Errorf("Error with is event at duration")
+	}
+	if !r.IsEventAtDuration(time.Date(1997, 9, 4, 9, 0, 0, 0, time.UTC), time.Date(1997, 9, 4, 9, 30, 0, 0, time.UTC), []time.Time{
+		time.Date(1997, 9, 4, 9, 0, 0, 0, time.UTC),
+	}) == false {
 		t.Errorf("Error with is event at duration")
 	}
 }

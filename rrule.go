@@ -963,11 +963,21 @@ func (r *RRule) GetUntil() time.Time {
 }
 
 // Implements efficap rule to detect if an event is here or not
-func (r *RRule) IsEventAtDuration(before time.Time, after time.Time) bool {
+func (r *RRule) IsEventAtDuration(before time.Time, after time.Time, exdates []time.Time) bool {
 	next := r.Iterator()
 	for {
 		start, ok := next()
 		end := start.Add(r.duration)
+		// If start date equals an exdate, skip it
+		isExdate := false
+		for _, exdate := range exdates {
+			if exdate.Equal(start) {
+				isExdate = true
+			}
+		}
+		if isExdate {
+			continue
+		}
 		if after.After(start) && after.Before(end) {
 			return true
 		}
